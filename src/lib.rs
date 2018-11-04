@@ -33,10 +33,13 @@ where
     T::Storage: fmt::Debug,
 {
     fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
-        fmt.debug_struct("UncheckedEnum")
-            .field("enum", &self.as_enum())
-            .field("value", &self.value)
-            .finish()
+        if let Some(val) = self.as_enum() {
+            fmt::Debug::fmt(&val, fmt)
+        } else {
+            fmt.debug_tuple("UncheckedEnum")
+                .field(&self.value)
+                .finish()
+        }
     }
 }
 
